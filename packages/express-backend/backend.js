@@ -65,6 +65,34 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
+const addUser = (user) => {
+    users["users_list"].push(user);
+    return user;
+  };
+  
+  app.post("/users", (req, res) => {
+    const userToAdd = req.body;
+    addUser(userToAdd);
+    res.send();
+  });
+
+const deleteUser = (user) => {
+    users["users_list"] = users["users_list"].filter(
+      (u) => u["id"] !== user["id"]
+    );
+  };
+
+app.delete("/users/:id", (req, res) => {
+    const id = req.params["id"];
+    const userToDelete = findUserById(id);
+    if (userToDelete === undefined) {
+        res.status(404).send("Resource not found.");
+    } else {
+        deleteUser(userToDelete);
+        res.send();
+    }
+});
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
