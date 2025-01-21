@@ -7,6 +7,21 @@ function Form(props) {
     job: ""
   });
 
+  function submitForm(e) {
+    e.preventDefault();  // Add this to prevent page refresh
+    if (person.name && person.job) {  // Basic validation
+      props.handleSubmit(person);
+      setPerson({ name: "", job: "" });
+    }
+  }
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    if (name === "job")
+      setPerson({ name: person["name"], job: value });
+    else setPerson({ name: value, job: person["job"] });
+  }
+
   return (
     <form>
       <label htmlFor="name">Name</label>

@@ -67,18 +67,29 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
-// const 
+const generateId = () => { // generate random id function string
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let id = '';
+    for (let i = 0; i < 6; i++) {
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return id;
+};
 
 const addUser = (user) => {
-    users["users_list"].push(user);
-    return user;
-  };
-  
-  app.post("/users", (req, res) => {
+    const newUser = {
+        id: generateId(),
+        ...user
+    };
+    users["users_list"].push(newUser);
+    return newUser;
+};
+
+app.post("/users", (req, res) => {
     const userToAdd = req.body;
-    addUser(userToAdd);
-    res.send();
-  });
+    const addedUser = addUser(userToAdd);
+    res.status(201).send(addedUser); // added 201 status code
+});
 
 const deleteUser = (user) => {
     users["users_list"] = users["users_list"].filter(
@@ -93,7 +104,7 @@ app.delete("/users/:id", (req, res) => {
         res.status(404).send("Resource not found.");
     } else {
         deleteUser(userToDelete);
-        res.send();
+        res.status(204).send();  // Changed to 204 No Content
     }
 });
 
